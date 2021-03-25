@@ -32,31 +32,33 @@ db.Workout.find({})
 })
 
 //add workout
-app.post("/api/workouts", ({body}, res) => { //{body} maps / destructures req.body ... 
-  db.Workout.create({body})
-  .then(dbWorkout => {
-    res.json(dbWorkout)
-  })
-  .catch(err => {
-    res.json(err)
-  })
-})
-
+app.post("/api/workouts", ({ body }, res) => {
+  db.Workout.create(body)
+    .then(({ _id }) => db.Workout.findOneAndUpdate({}, { $push: { workout: _id } }))
+    .then(dbWorkout => {
+      res.json(dbWorkout);
+    })
+    .catch(err => {
+      res.json(err);
+    });
+});
 
 //add to routine ... spelled that routube almost help
-app.put("/api/workouts/:id", ({body}, res) => { //{body} maps / destructures req.body ... 
+app.put("/api/workouts/:id", (req, res) => { 
+  console.log(req.params.id)
   db.Workout.updateOne( 
-    {_id: body.id},
-    console.log(req.params.id),
-    {$push: //object containing information added by user
-      {
-        type: body.type,
-        name: body.name,
-        distance: body.distance,
-        duration: body.duration,
-        weight: body.weight,
-        sets: body.sets,
-        reps: body.reps,
+    {_id: req.params.id},
+    {$push: 
+      {exercises: //object containing information added by user
+        {
+          type: req.body.type,
+          name: req.body.name,
+          distance: req.body.distance,
+          duration: req.body.duration,
+          weight: req.body.weight,
+          sets: req.body.sets,
+          reps: req.body.reps,
+        }
       }
     }) 
   .then(dbWorkout => {
