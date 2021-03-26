@@ -20,17 +20,6 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { use
 
 // API 
 
-//find last workout
-// app.get("/api/workouts", (req, res) => {
-// db.Workout.find({})
-//   .then(dbWorkout => {
-//     res.json(dbWorkout)
-//   })
-//   .catch(err => {
-//     res.json(err)
-//   })
-// })
-
 // find last workout
 app.get("/api/workouts", (req, res) => {
   db.Workout.aggregate([
@@ -86,17 +75,36 @@ app.put("/api/workouts/:id", (req, res) => {
   })
 })
 
+app.get('/api/workouts/range', (req, res) => {
+  db.Workout.aggregate([
+    {
+      $addFields: {
+        totalDuration: {$sum: "$exercises.duration"}
+      }
+    }
+  ])
+  .limit(7)
+  //.sort({ _id: 1 }) 
+  .then((data) => {
+    console.log(data)
+    res.json(data)
+  })
+  .catch((err) => {
+    res.json(err)
+  })
+})
+
 
 // HTML
 
 //stats route
 app.get("/stats", (req, res) => {
-  res.sendFile(path.join(__dirname + '/public/stats.html'));
+  res.sendFile(path.join(__dirname + "/public/stats.html"))
 });
 
 //exercise route
 app.get("/exercise", (req, res) => {
-  res.sendFile(path.join(__dirname + '/public/exercise.html'));
+  res.sendFile(path.join(__dirname + "/public/exercise.html"));
 });
 
 app.listen(PORT, () => {
