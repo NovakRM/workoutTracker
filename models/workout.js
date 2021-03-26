@@ -11,11 +11,11 @@ const workoutSchema = new Schema({
     {
       type: {type: String, trim: true}, 
       name:  {type: String, trim: true}, 
-      distance: {type: Number, trim: true, default: 0}, 
-      duration: {type: Number, trim: true, default: 0}, 
+      distance: {type: Number, trim: true}, 
+      duration: {type: Number, trim: true}, 
       weight: {type: Number, trim: true}, 
-      sets: {type: Number, trim: true, default: 0}, 
-      reps: {type: Number, trim: true, default: 0}, 
+      sets: {type: Number, trim: true}, 
+      reps: {type: Number, trim: true}, 
       //key: {type: data type, trim: remove whitespace, default: integer here}
     }
   ]

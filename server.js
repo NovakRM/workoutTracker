@@ -21,20 +21,37 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", { use
 // API 
 
 //find last workout
+// app.get("/api/workouts", (req, res) => {
+// db.Workout.find({})
+//   .then(dbWorkout => {
+//     res.json(dbWorkout)
+//   })
+//   .catch(err => {
+//     res.json(err)
+//   })
+// })
+
+// find last workout
 app.get("/api/workouts", (req, res) => {
-db.Workout.find({})
-  .then(dbWorkout => {
-    res.json(dbWorkout)
+  db.Workout.aggregate([
+    {
+      $addFields: {
+        totalDuration: {$sum: "$exercises.duration"}
+      }
+    }
+  ])
+    .then(dbWorkout => {
+      console.log(dbWorkout)
+      res.json(dbWorkout)
+    })
+    .catch(err => {
+      res.json(err)
+    })
   })
-  .catch(err => {
-    res.json(err)
-  })
-})
 
 //add workout
 app.post("/api/workouts", ({ body }, res) => {
   db.Workout.create(body)
-    .then(({ _id }) => db.Workout.findOneAndUpdate({}, { $push: { workout: _id } }))
     .then(dbWorkout => {
       res.json(dbWorkout);
     })
