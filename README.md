@@ -20,7 +20,7 @@ Adding workout:
 
 
 Dashboard
-![screenshot](./public/assets/dash.jpg)
+![screenshot](./public/assets/dash.png)
 
 ## Questions
 * [GitHub Profile](http://github.com/Osteophagy)
